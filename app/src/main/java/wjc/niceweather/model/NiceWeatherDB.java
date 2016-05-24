@@ -1,8 +1,10 @@
 package wjc.niceweather.model;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +90,7 @@ public class NiceWeatherDB {
      *
      * @param city
      */
-    public void saveProvince(City city) {
+    public void saveCity(City city) {
 
         if (city != null) {
             db.execSQL("INSERT INTO city (city_name,city_code,province_id)VALUES (?,?,?)", new String[]{city.getCityName(), city.getCityCode(), String.valueOf(city.getProvinceId())});
@@ -101,16 +103,17 @@ public class NiceWeatherDB {
      * @return
      */
 
-    public List<City> loadCities() {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public List<City> loadCities(int provinceId) {
         List<City> list = new ArrayList<City>();
-        Cursor cursor = db.rawQuery("SELECT * FROM city", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM city WHERE province_id =?", new String[]{String.valueOf(provinceId)}, null);
         if (cursor.moveToFirst()) {
             do {
                 City city = new City();
                 city.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
                 city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
-                city.setProvinceId(cursor.getInt(cursor.getColumnIndex("province_id")));
+                city.setProvinceId(provinceId);
                 list.add(city);
 
             } while (cursor.moveToNext());
@@ -142,16 +145,17 @@ public class NiceWeatherDB {
      * @return
      */
 
-    public List<County> loadCounties() {
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public List<County> loadCounties(int cityId) {
         List<County> list = new ArrayList<County>();
-        Cursor cursor = db.rawQuery("SELECT * FROM county", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM county WHERE city_id=?",new String[]{String.valueOf(cityId)}, null);
         if (cursor.moveToFirst()) {
             do {
                 County county = new County();
                 county.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
                 county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
-                county.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
+                county.setCityId(cityId);
                 list.add(county);
 
             } while (cursor.moveToNext());
