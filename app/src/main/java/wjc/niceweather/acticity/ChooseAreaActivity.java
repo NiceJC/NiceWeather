@@ -126,6 +126,7 @@ public class ChooseAreaActivity extends Activity {
      *
      */
     private void queryCities() {
+//        cityList.clear();
         cityList=niceWeatherDB.loadCities(selectedProvince.getId());
         if(cityList.size()>0){
             dataList.clear();
@@ -152,6 +153,7 @@ public class ChooseAreaActivity extends Activity {
      */
 
     private void queryCounties() {
+//        countyList.clear();
         countyList=niceWeatherDB.loadCounties(selectedCity.getId());
         if(countyList.size()>0){
             dataList.clear();
@@ -262,11 +264,12 @@ public class ChooseAreaActivity extends Activity {
     @Override
     public void onBackPressed() {
         if(currentLevel==LEVEL_COUNTY){
-            currentLevel=LEVEL_CITY;
+
             queryCities();
         }else if(currentLevel==LEVEL_CITY){
+
             queryProvinces();
-            currentLevel=LEVEL_PROVINCE;
+
         }else {
             finish();
         }

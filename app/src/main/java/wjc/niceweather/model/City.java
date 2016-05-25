@@ -7,13 +7,13 @@ package wjc.niceweather.model;
  *
  */
 public class City {
-    private int id;
+    private int _id;
     private int provinceId;
     private String cityName;
     private String cityCode;
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public void setProvinceId(int provinceId) {
@@ -30,7 +30,7 @@ public class City {
 
     public int getId() {
 
-        return id;
+        return _id;
     }
 
     public int getProvinceId() {

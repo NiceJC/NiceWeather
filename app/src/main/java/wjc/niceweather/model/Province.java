@@ -6,13 +6,13 @@ package wjc.niceweather.model;
  * Province的实体类
  */
 public class Province {
-    private int id;
+    private int _id;
     private String provinceName;
     private String provinceCode;
 
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public void setProvinceName(String provinceName) {
@@ -25,7 +25,7 @@ public class Province {
 
     public int getId() {
 
-        return id;
+        return _id;
     }
 
     public String getProvinceName() {

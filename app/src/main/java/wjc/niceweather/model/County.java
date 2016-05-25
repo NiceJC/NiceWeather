@@ -7,13 +7,13 @@ package wjc.niceweather.model;
  *
  */
 public class County {
-    private int id;
+    private int _id;
     private int cityId;
     private String countyName;
     private String countyCode;
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public int getCityId() {
@@ -29,7 +29,7 @@ public class County {
     }
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public void setCityId(int cityId) {
