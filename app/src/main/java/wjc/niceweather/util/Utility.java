@@ -158,6 +158,8 @@ public class Utility {
 
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
         SharedPreferences.Editor editor= PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+        //设置一个city_selected标志位，用于判断当前是否已有城市被选中
         editor.putBoolean("city_selected",true);
         editor.putString("city_name",cityName);
         editor.putString("weather_code",weatherCode);

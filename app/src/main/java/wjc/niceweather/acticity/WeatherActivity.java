@@ -1,14 +1,17 @@
 package wjc.niceweather.acticity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import wjc.niceweather.R;
 import wjc.niceweather.util.HttpCallbackListener;
@@ -18,7 +21,7 @@ import wjc.niceweather.util.Utility;
 /**
  * Created by wjc on 16/5/26.
  */
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements View.OnClickListener {
 
     private LinearLayout weatherInfoLayout;
     //显示城市名
@@ -33,6 +36,11 @@ public class WeatherActivity extends Activity {
     private TextView temp2Text;
     //用于显示当前日期
     private TextView currentDateText;
+
+    //切换城市按钮
+    private Button switchCity;
+    //更新天气按钮
+    private Button refreshWeather;
 
 
     @Override
@@ -52,6 +60,12 @@ public class WeatherActivity extends Activity {
         temp2Text = (TextView) findViewById(R.id.temp2);
         currentDateText = (TextView) findViewById(R.id.current_date);
 
+        switchCity= (Button) findViewById(R.id.switch_city);
+        refreshWeather= (Button) findViewById(R.id.regresh_weather);
+        switchCity.setOnClickListener(this);
+        refreshWeather.setOnClickListener(this);
+
+
         String countyCode = getIntent().getStringExtra("county_code");
         if (!TextUtils.isEmpty(countyCode)) {
             //接受到Intent传递过来的countyCode，进入查询天气的步骤
@@ -61,7 +75,7 @@ public class WeatherActivity extends Activity {
             queryWeatherCode(countyCode);
 
         } else {
-            //没有县级代号时，直接显示本地存储的天气
+            //没有县级代号时，直接显示本地存储的天气信息
             showWeather();
 
         }
@@ -146,5 +160,39 @@ public class WeatherActivity extends Activity {
         cityNameText.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.switch_city:
+                /**
+                 * 对于切换城市的按钮点击事件，直接让他回到选择城市的活动去，
+                 * 但是由于已经选中过一个城市，SharedPreferences中的city_selected为true，又会返回到天气活动来，
+                 * 所以设置一个from_weather_activity标志位进行后续处理
+                 *
+                 */
+                Intent intent=new Intent(this,ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity",true);
+                startActivity(intent);
+                finish();
+                break;
+
+            case R.id.regresh_weather:
+                /**
+                 * 对于刷新按钮，直接从本地SharedPreferences文件中读取weatherCode
+                 * 并调用queryWeatherInfo从服务器获取最新天气信息进行更新
+                 */
+                SharedPreferences preferences=PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode=preferences.getString("weatherCode","");
+                if(!TextUtils.isEmpty(weatherCode)){
+                    queryWeatherInfo(weatherCode);
+                }
+                Toast.makeText(WeatherActivity.this,"更新完成",Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+
+
+    }
 }
 

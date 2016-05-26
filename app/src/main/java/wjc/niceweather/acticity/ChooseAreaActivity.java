@@ -63,14 +63,28 @@ public class ChooseAreaActivity extends Activity {
     //当前选中的级别
     private int currentLevel;
 
+    //是否从WeatherActivity跳转过来
+    private boolean isFromWeatherActivity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //从Intent中获取from_weather_activity标志位，默认值为false
+        isFromWeatherActivity=getIntent().getBooleanExtra("from_weather_activity",false);
+
 
         SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        if(prefs.getBoolean("city_selected",false)){
+
+        /**
+         * city_selected标志位默认返回值为false，即本地文件数据为空时会返回false
+         * 对city_selected标志位和from_weather_activity标志位进行判断，
+         * 只有在已经有城市被选中过并且不是从WeatherActivity跳转回来的情况行下，才跳转到WeatherActivity
+         *
+         * 跳转到WeatherActivity后，从Intent中得不到county_Code，就会直接调用showWeather将本地文件中的天气信息显示出来
+         */
+        if(prefs.getBoolean("city_selected",false)&&!isFromWeatherActivity){
             Intent intent=new Intent(this,WeatherActivity.class);
             startActivity(intent);
             finish();
@@ -290,6 +304,11 @@ public class ChooseAreaActivity extends Activity {
             queryProvinces();
 
         }else {
+            if(isFromWeatherActivity){
+                //如果时从WeatherActivity跳转过来的，back可回到WeatherActivity（并显示本地存储的天气信息）
+                Intent intent=new Intent(this,WeatherActivity.class);
+                startActivity(intent);
+            }
             finish();
         }
     }
