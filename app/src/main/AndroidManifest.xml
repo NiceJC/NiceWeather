@@ -22,6 +22,9 @@
 
 
         </activity>
+        <activity android:name=".acticity.WeatherActivity">
+
+        </activity>
 
 
     </application>
