@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import wjc.niceweather.R;
+import wjc.niceweather.receiver.AutoUpdateReceiver;
+import wjc.niceweather.service.AutoUpdateService;
 import wjc.niceweather.util.HttpCallbackListener;
 import wjc.niceweather.util.HttpUtil;
 import wjc.niceweather.util.Utility;
@@ -158,6 +160,12 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         currentDateText.setText(preferences.getString("current_date",""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+
+        //在这里create  AutoUpdateService， 让他在后台运行起来
+        //保证客户一旦选择了城市并且更新了天气之后，AutoUpdateService就在后台运行并定时更新天气
+
+        Intent intent=new Intent(this , AutoUpdateService.class);
+        startService(intent);
     }
 
     @Override
